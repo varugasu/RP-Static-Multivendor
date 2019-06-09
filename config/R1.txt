@@ -1,0 +1,27 @@
+configure
+set system host-name R1
+set interfaces ge-0/0/0 unit 0 family inet address 10.1.2.1/24
+set interfaces ge-0/0/0 unit 0 family iso
+set interfaces ge-0/0/1 unit 0 family inet address 10.1.3.1/24
+set interfaces ge-0/0/1 unit 0 family iso
+set interfaces ge-0/0/2 unit 0 family inet address 10.1.5.1/24
+set interfaces ge-0/0/2 unit 0 family iso
+set interfaces lo0 unit 0 family inet address 10.1.255.1/32
+set interfaces lo0 unit 0 family iso address 49.0000.0000.0000.0001.00
+set protocols isis level 1 disable
+set protocols isis level 2 wide-metrics-only
+set protocols isis interface lo0.0 passive
+set protocols isis interface ge-0/0/0.0 point-to-point
+set protocols isis interface ge-0/0/1.0 point-to-point
+set protocols isis interface ge-0/0/2.0 point-to-point passive
+set chassis fpc 0 pic 0 tunnel-services 
+set protocols pim rp local address 10.1.255.1
+set protocols pim rp local group-ranges 239.6.6.6/32
+set protocols pim rp static address 10.1.255.2 group-ranges 239.8.8.8/32
+set protocols pim rp static address 10.1.255.3 group-ranges 239.5.5.5/32
+set protocols pim rp static address 10.1.255.4 group-ranges 239.7.7.7/32
+set protocols pim interface ge-0/0/0.0 mode sparse
+set protocols pim interface ge-0/0/1.0 mode sparse
+set protocols pim interface ge-0/0/2.0 mode sparse
+set protocols pim interface ge-0/0/2.0 hello-interval 0 
+set protocols pim interface lo0.0 mode sparse

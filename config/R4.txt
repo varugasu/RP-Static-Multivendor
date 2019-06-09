@@ -1,0 +1,49 @@
+configure
+domain lookup disable
+line con exec-timeout 0 0
+hostname R4
+int lo0
+ ipv4 add 10.1.255.4/32
+int gi0/0/0/0
+ ipv4 add 10.2.4.4/24
+ no shut
+int gi0/0/0/1
+ ipv4 add 10.3.4.4/24
+ no shut
+int gi0/0/0/2
+ ipv4 add 10.4.8.4/24
+ no shut
+router isis IGP
+ net 49.0000.0000.0000.0004.00
+ is-type level-2-only
+ address-family ipv4 unicast
+  metric-style wide
+ interface lo0
+  passive
+  address-family ipv4 unicast
+ interface gi0/0/0/0
+  point-to-point
+  address-family ipv4 unicast
+ interface gi0/0/0/1
+  point-to-point
+  address-family ipv4 unicast
+ interface gi0/0/0/2
+  passive
+  point-to-point
+  address-family ipv4 unicast
+multicast-routing
+ address-family ipv4
+  interface lo0 enable
+  interface gi0/0/0/0 enable
+  interface gi0/0/0/1 enable
+  interface gi0/0/0/2 enable
+ipv4 access-list SOURCE_5 permit 239.5.5.5/32
+ipv4 access-list SOURCE_6 permit 239.6.6.6/32
+ipv4 access-list SOURCE_7 permit 239.7.7.7/32
+ipv4 access-list SOURCE_8 permit 239.8.8.8/32
+router pim
+ ipv4
+  rp-address 10.1.255.1 SOURCE_6
+  rp-address 10.1.255.2 SOURCE_8
+  rp-address 10.1.255.3 SOURCE_5
+  rp-address 10.1.255.4 SOURCE_7
